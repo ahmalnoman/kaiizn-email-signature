@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generate your official Kaiizn email signature.">
+  <meta name="color-scheme" content="dark">
+  <title>Kaiizn · Email Signature</title>
+
+  <link rel="icon" type="image/png" href="kaiizn-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg:           #0a0a0f;
+      --bg-elev:      #111118;
+      --surface:      #15151d;
+      --surface-2:    #1c1c26;
+      --border:       #24242f;
+      --border-soft:  #1c1c26;
+      --text:         #f4f4f5;
+      --text-2:       #a1a1aa;
+      --text-3:       #71717a;
+      --text-4:       #52525b;
+      --danger:       #ef4444;
+      --success:      #10b981;
+      --focus:        #fbbf24;
+
+      /* Kaiizn brand gradient sampled from the K mark */
+      --k-orange: #ff5b00;
+      --k-amber:  #ffb800;
+      --k-violet: #7c3aed;
+      --brand: linear-gradient(135deg, var(--k-orange) 0%, var(--k-amber) 45%, var(--k-violet) 100%);
+      --brand-soft: linear-gradient(135deg,
+        rgba(255,91,0,0.14) 0%,
+        rgba(255,184,0,0.10) 45%,
+        rgba(124,58,237,0.18) 100%);
+
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow-lg: 0 24px 60px -20px rgba(0,0,0,0.7), 0 8px 20px -8px rgba(0,0,0,0.5);
+
+      --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    html { background: var(--bg); }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+      font-feature-settings: "ss01", "cv01", "cv11";
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background glow */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(1200px 600px at 85% -10%, rgba(124,58,237,0.18), transparent 60%),
+        radial-gradient(900px 500px at -10% 20%, rgba(255,91,0,0.10), transparent 55%),
+        radial-gradient(700px 400px at 50% 110%, rgba(255,184,0,0.06), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Subtle grain overlay for texture */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      opacity: 0.6;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 28px 80px;
+    }
+
+    /* ───────── Top Bar ───────── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0 36px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+    }
+
+    .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+
+    .brand-text {
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      font-size: 15px;
+      text-transform: uppercase;
+    }
+
+    .brand-dot {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--k-amber);
+      margin: 0 10px 4px;
+      vertical-align: middle;
+    }
+
+    .brand-tool {
+      color: var(--text-2);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-transform: none;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+      color: var(--text-3);
+    }
+
+    .topbar-right a {
+      color: var(--text-2);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .topbar-right a:hover { color: var(--text); }
+
+    .env-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.18);
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    /* ───────── Hero ───────── */
+    .hero {
+      margin-bottom: 36px;
+      max-width: 820px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 18px;
+    }
+
+    .hero-eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--text-4);
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 4.4vw, 48px);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      margin-bottom: 14px;
+    }
+
+    .hero h1 .accent {
+      background: var(--brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--text-2);
+      max-width: 560px;
+    }
+
+    /* ───────── Local warning banner ───────── */
+    .banner {
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      color: #fcd34d;
+      font-size: 13px;
+      line-height: 1.55;
+      margin-bottom: 28px;
+    }
+    .banner.show { display: flex; }
+    .banner strong { color: #fde68a; font-weight: 600; }
+    .banner svg { flex-shrink: 0; margin-top: 2px; }
+
+    /* ───────── Main Grid ───────── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ───────── Card ───────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+    }
+
+    .card-title .idx {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-4);
+      font-weight: 500;
+    }
+
+    /* ───────── Form ───────── */
+    .form-body {
+      padding: 24px 22px;
+    }
+
+    .fgroup + .fgroup { margin-top: 16px; }
+
+    .fgroup label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 7px;
+      letter-spacing: 0.02em;
+    }
+
+    .fgroup label .optional {
+      color: var(--text-4);
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .fgroup label .required-dot {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--k-orange);
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .fgroup input,
+    .fgroup select {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    }
+
+    .fgroup input::placeholder { color: var(--text-4); }
+
+    .fgroup input:hover,
+    .fgroup select:hover { border-color: #33333f; }
+
+    .fgroup input:focus,
+    .fgroup select:focus {
+      border-color: var(--k-amber);
+      box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.12);
+      background: var(--bg);
+    }
+
+    .fgroup.invalid input,
+    .fgroup.invalid select {
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    .fgroup .hint {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-4);
+      font-family: var(--font-mono);
+    }
+
+    .fgroup .err {
+      display: none;
+      margin-top: 6px;
+      font-size: 12px;
+      color: #f87171;
+    }
+    .fgroup.invalid .err { display: block; }
+    .fgroup.invalid .hint { display: none; }
+
+    .fgroup select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' stroke='%23a1a1aa' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .fgroup select option {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .form-actions {
+      padding: 18px 22px 22px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: linear-gradient(180deg, transparent, rgba(124,58,237,0.04));
+    }
+
+    /* ───────── Buttons ───────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      font-size: 13.5px;
+      font-weight: 600;
+      font-family: inherit;
+      letter-spacing: -0.005em;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: transform 0.08s ease, background 0.15s, border-color 0.15s, color 0.15s, opacity 0.2s;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #0a0a0f;
+      font-weight: 700;
+      position: relative;
+      box-shadow: 0 6px 24px -8px rgba(255,91,0,0.35), 0 4px 16px -6px rgba(124,58,237,0.35);
+    }
+    .btn-primary:hover { filter: brightness(1.08) saturate(1.1); }
+
+    .btn-primary svg { color: #0a0a0f; }
+
+    .btn-secondary {
+      background: var(--bg-elev);
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-secondary:hover { border-color: #33333f; background: var(--surface-2); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-2);
+      border-color: transparent;
+      padding: 10px 12px;
+      font-weight: 500;
+    }
+    .btn-ghost:hover { color: var(--text); background: var(--surface-2); }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .kbd {
+      display: inline-flex;
+      align-items: center;
+      padding: 1px 6px;
+      height: 18px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-3);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+
+    /* ───────── Preview Cards ───────── */
+    .preview-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .preview-card .preview-body {
+      padding: 32px 28px;
+      min-height: 132px;
+      display: flex;
+      align-items: center;
+    }
+
+    .preview-body.light { background: #ffffff; }
+    .preview-body.dark  { background: #0f0f17; }
+
+    .mode-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px 4px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-2);
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .mode-chip .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+    }
+    .mode-chip.light .dot { background: #f5f5f5; box-shadow: 0 0 0 2px rgba(255,255,255,0.12); }
+    .mode-chip.dark .dot  { background: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,0.18); }
+
+    .preview-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-4);
+    }
+
+    /* Divider above signature helps show the email-body context */
+    .email-context {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #9ca3af;
+      padding: 0 0 18px;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.22);
+      margin-bottom: 24px;
+    }
+    .email-context.dark { color: #6b7280; border-bottom-color: rgba(107, 114, 128, 0.24); }
+
+    .preview-body > div { width: 100%; }
+
+    /* ───────── Footer strip ───────── */
+    .footnote {
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 12.5px;
+      color: var(--text-3);
+    }
+    .footnote strong { color: var(--text-2); font-weight: 600; }
+    .footnote a { color: var(--text-2); text-decoration: none; border-bottom: 1px dotted var(--text-4); }
+    .footnote a:hover { color: var(--text); border-bottom-color: var(--text-2); }
+
+    /* ───────── Modal ───────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 9, 0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      animation: fade-in 0.18s ease;
+    }
+    .modal-overlay.active { display: flex; }
+
+    @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scale-in {
+      from { opacity: 0; transform: translateY(8px) scale(0.99); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 720px;
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      animation: scale-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+      overflow: hidden;
+    }
+    .modal.wide { max-width: 820px; }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .modal-head h3 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .icon-btn:hover { background: var(--surface-2); color: var(--text); }
+
+    .modal-body {
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .modal-foot {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      background: var(--bg-elev);
+    }
+
+    /* ───────── HTML textarea ───────── */
+    textarea.code {
+      width: 100%;
+      min-height: 360px;
+      max-height: 60vh;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+      color: #e4e4e7;
+      background: var(--bg);
+      border: none;
+      border-radius: 0;
+      padding: 20px 24px;
+      resize: none;
+      outline: none;
+    }
+
+    /* ───────── Install guide tabs ───────── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 12px 20px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .tab {
+      padding: 9px 14px 11px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-3);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      font-family: inherit;
+      border-radius: 0;
+    }
+    .tab:hover { color: var(--text-2); }
+    .tab.active {
+      color: var(--text);
+      border-bottom-color: var(--k-amber);
+    }
+
+    .tab-panels {
+      overflow-y: auto;
+      padding: 22px 24px 24px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fade-in 0.2s ease; }
+
+    .tab-panel h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 18px 0 8px;
+      letter-spacing: -0.01em;
+    }
+    .tab-panel h4:first-child { margin-top: 0; }
+
+    .tab-panel ol {
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+    }
+    .tab-panel ol li {
+      counter-increment: step;
+      position: relative;
+      padding: 8px 0 8px 38px;
+      font-size: 13.5px;
+      color: var(--text-2);
+      line-height: 1.6;
+    }
+    .tab-panel ol li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--text-3);
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+    .tab-panel ol li code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 1px 6px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+    }
+    .tab-panel ol li strong { color: var(--text); font-weight: 600; }
+
+    .tab-panel .callout {
+      margin-top: 16px;
+      padding: 12px 14px;
+      background: var(--brand-soft);
+      border: 1px solid rgba(124, 58, 237, 0.22);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      color: var(--text-2);
+      line-height: 1.55;
+    }
+    .tab-panel .callout strong { color: var(--text); }
+
+    /* ───────── Toast ───────── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 12px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 200;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
+    .toast .check {
+      width: 18px; height: 18px;
+      display: grid; place-items: center;
+      background: var(--success);
+      border-radius: 50%;
+      color: #06261c;
+    }
+    .toast.err .check { background: var(--danger); color: #fff; }
+
+    /* ───────── Signature built inside preview — keep clean from app styles ───────── */
+    /* Signature's own styles are all inline; no leakage here. */
+
+    @media (max-width: 600px) {
+      .container { padding: 18px 16px 64px; }
+      .topbar { padding-bottom: 24px; }
+      .hero h1 { font-size: 30px; }
+      .btn-row { grid-template-columns: 1fr; }
+      .modal { max-height: 92vh; }
+      .tabs { overflow-x: auto; padding-left: 14px; padding-right: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Top bar -->
+  <nav class="topbar">
+    <a class="brand" href="./" aria-label="Kaiizn home">
+      <span class="brand-mark"><img src="kaiizn-icon.png" alt="" aria-hidden="true"></span>
+      <span class="brand-text">Kaiizn<span class="brand-dot"></span><span class="brand-tool">Signature</span></span>
+    </a>
+    <div class="topbar-right">
+      <span><span class="env-dot"></span>Live</span>
+      <a href="https://kaiizn.com" target="_blank" rel="noopener">kaiizn.com ↗</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-eyebrow">Internal · Brand toolkit</div>
+    <h1>Your <span class="accent">Kaiizn</span> email signature, ready in seconds.</h1>
+    <p>Fill in your details, hit copy, and paste into Gmail, Outlook or Apple Mail. One consistent look across the team — every email, every client, light or dark.</p>
+  </header>
+
+  <!-- Local-file warning -->
+  <div class="banner" id="local-banner" role="alert">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div>
+      <strong>Heads-up:</strong> you're viewing this from a local file. The signature preview works, but the copied logo image will only render in real emails once this page is deployed (e.g. GitHub Pages). Deploy the repo, then share the public URL with the team.
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="main-grid">
+
+    <!-- Form -->
+    <section class="card" aria-labelledby="form-title">
+      <div class="card-head">
+        <div class="card-title">
+          <span class="idx">01</span>
+          <span id="form-title">Your details</span>
+        </div>
+      </div>
+
+      <div class="form-body">
+        <div class="fgroup" data-field="name">
+          <label for="sig-name">Full name<span class="required-dot" aria-hidden="true"></span></label>
+          <input type="text" id="sig-name" autocomplete="name" placeholder="e.g. Ahmed Noman" required>
+          <div class="err">Please enter your full name.</div>
+        </div>
+
+        <div class="fgroup" data-field="role">
+          <label for="sig-role">Role / Title<span class="required-dot" aria-hidden="true"></span></label>
+          <input type="text" id="sig-role" placeholder="e.g. Software Engineer" required>
+          <div class="err">Please enter your role.</div>
+        </div>
+
+        <div class="fgroup" data-field="office">
+          <label for="sig-office">Office<span class="required-dot" aria-hidden="true"></span></label>
+          <select id="sig-office" required>
+            <option value="">Select office…</option>
+            <option value="Cairo">Cairo</option>
+            <option value="Berlin">Berlin</option>
+          </select>
+          <div class="err">Please pick your office.</div>
+        </div>
+
+        <div class="fgroup" data-field="phone">
+          <label for="sig-phone">Phone <span class="optional">Optional</span></label>
+          <input type="tel" id="sig-phone" autocomplete="tel" placeholder="e.g. +20 123 456 7890">
+          <div class="hint">Include country code, e.g. +20, +49</div>
+        </div>
+
+        <div class="fgroup" data-field="linkedin">
+          <label for="sig-linkedin">LinkedIn <span class="optional">Optional</span></label>
+          <input type="text" id="sig-linkedin" placeholder="linkedin.com/in/username or URL">
+          <div class="hint">Username or full URL — both work</div>
+          <div class="err">That doesn't look like a valid LinkedIn link.</div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" id="copy-btn" type="button">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span>Copy signature</span>
+          <span class="kbd">⌘⏎</span>
+        </button>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="html-btn" type="button">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            View HTML
+          </button>
+          <button class="btn btn-secondary" id="guide-btn" type="button">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Install guide
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Preview -->
+    <section class="preview-stack" aria-label="Signature preview">
+
+      <div class="card preview-card">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="idx">02</span>
+            <span>Preview</span>
+          </div>
+          <span class="mode-chip light"><span class="dot"></span>Light mode</span>
+        </div>
+        <div class="preview-body light">
+          <div>
+            <div class="email-context">— Best,</div>
+            <div id="preview-light"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card preview-card">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="idx">03</span>
+            <span>Preview</span>
+          </div>
+          <span class="mode-chip dark"><span class="dot"></span>Dark mode</span>
+        </div>
+        <div class="preview-body dark">
+          <div>
+            <div class="email-context dark">— Best,</div>
+            <div id="preview-dark"></div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Footnote -->
+  <div class="footnote">
+    <div>
+      <strong>Tip:</strong> Share a pre-filled link with a teammate — the URL captures your details as you type.
+    </div>
+    <div>
+      Built for the <strong>Kaiizn</strong> team · Questions? Ping
+      <a href="mailto:noman@kaiizn.com">noman@kaiizn.com</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- HTML modal -->
+<div class="modal-overlay" id="html-modal" role="dialog" aria-modal="true" aria-labelledby="html-modal-title">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="html-modal-title">Signature HTML</h3>
+      <button class="icon-btn" data-close="html-modal" aria-label="Close">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <textarea class="code" id="html-output" readonly spellcheck="false"></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" data-close="html-modal" type="button">Close</button>
+      <button class="btn btn-primary" id="copy-html-btn" type="button">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy HTML
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Install guide modal -->
+<div class="modal-overlay" id="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-title">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h3 id="guide-title">Install your signature</h3>
+      <button class="icon-btn" data-close="guide-modal" aria-label="Close">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="gmail" role="tab" aria-selected="true">Gmail</button>
+        <button class="tab" data-tab="apple" role="tab">Apple Mail</button>
+        <button class="tab" data-tab="outlook-web" role="tab">Outlook (Web)</button>
+        <button class="tab" data-tab="outlook-desk" role="tab">Outlook (Desktop)</button>
+        <button class="tab" data-tab="others" role="tab">Others</button>
+      </div>
+      <div class="tab-panels">
+
+        <div class="tab-panel active" data-panel="gmail">
+          <h4>Add your signature in Gmail</h4>
+          <ol>
+            <li>Back on this page, click <strong>Copy signature</strong>.</li>
+            <li>Open <a href="https://mail.google.com/mail/u/0/#settings/general" target="_blank" rel="noopener"><code>Gmail → Settings → See all settings → General</code></a>.</li>
+            <li>Scroll to <strong>Signature</strong> → click <strong>Create new</strong> → name it e.g. <em>Kaiizn</em>.</li>
+            <li>Click into the signature editor and <strong>paste</strong> (<code>⌘V</code> / <code>Ctrl+V</code>).</li>
+            <li>Under <strong>Signature defaults</strong>, pick it for new mails and replies.</li>
+            <li>Scroll down and click <strong>Save Changes</strong>.</li>
+          </ol>
+          <div class="callout">
+            <strong>Logo not showing?</strong> Send yourself a test email. Gmail caches the image on first load. If it still doesn't render, make sure the repo is deployed (e.g. GitHub Pages) so <code>kaiizn-icon.png</code> is publicly reachable.
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="apple">
+          <h4>Add your signature in Apple Mail (macOS)</h4>
+          <ol>
+            <li>Click <strong>Copy signature</strong> on this page.</li>
+            <li>Open <strong>Mail</strong> → menu bar → <strong>Mail › Settings › Signatures</strong>.</li>
+            <li>Select your Kaiizn account in the left column.</li>
+            <li>Click <strong>+</strong> to create a new signature, name it <em>Kaiizn</em>.</li>
+            <li><strong>Uncheck</strong> "Always match my default message font" (important).</li>
+            <li>Click into the right pane and <strong>paste</strong> (<code>⌘V</code>).</li>
+            <li>Set it as the default under <strong>Choose Signature</strong>.</li>
+          </ol>
+          <div class="callout">
+            <strong>iOS?</strong> Send the signature to yourself from macOS, then on iPhone go to <code>Settings › Mail › Signature</code>, long-press the field, and paste.
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="outlook-web">
+          <h4>Add your signature in Outlook on the web</h4>
+          <ol>
+            <li>Click <strong>Copy signature</strong> on this page.</li>
+            <li>Open Outlook → top-right <strong>Settings ⚙</strong> → <strong>Mail → Compose and reply</strong>.</li>
+            <li>Under <strong>Email signature</strong>, click <strong>+ New signature</strong>.</li>
+            <li>Paste into the editor (<code>⌘V</code> / <code>Ctrl+V</code>).</li>
+            <li>Pick it as default for new messages and replies → <strong>Save</strong>.</li>
+          </ol>
+        </div>
+
+        <div class="tab-panel" data-panel="outlook-desk">
+          <h4>Add your signature in Outlook desktop (Windows/Mac)</h4>
+          <ol>
+            <li>On this page, click <strong>View HTML</strong> and copy the HTML.</li>
+            <li>In Outlook, open <strong>File → Options → Mail → Signatures…</strong> (Windows) or <strong>Outlook → Settings → Signatures</strong> (Mac).</li>
+            <li>Click <strong>New</strong>, name it <em>Kaiizn</em>.</li>
+            <li>Paste into the editor. If images disappear, use <strong>Copy signature</strong> from this page instead (rich copy) and paste.</li>
+            <li>Set as default for new mail and replies.</li>
+          </ol>
+          <div class="callout">
+            Outlook Desktop has quirks with HTML signatures. If formatting breaks, use <strong>Copy signature</strong> (not "Copy HTML"), paste, and save.
+          </div>
+        </div>
+
+        <div class="tab-panel" data-panel="others">
+          <h4>Other clients</h4>
+          <ol>
+            <li><strong>Superhuman / Spark / Hey:</strong> Click <strong>Copy signature</strong>, then paste into the client's signature settings editor.</li>
+            <li><strong>Thunderbird:</strong> Click <strong>View HTML</strong>, save to a <code>.html</code> file, and point Thunderbird at it via <em>Account Settings → Signature file</em>.</li>
+            <li><strong>Anything else:</strong> If the editor accepts rich text, use <strong>Copy signature</strong>. If it only takes raw HTML, use <strong>View HTML → Copy HTML</strong>.</li>
+          </ol>
+          <div class="callout">
+            Need help? Ping <a href="mailto:noman@kaiizn.com" style="color:inherit;text-decoration:underline;">noman@kaiizn.com</a> and we'll sort it out.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="check">
+    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </span>
+  <span id="toast-msg">Copied</span>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ─────────────────────────────────────────────────────────────
+  // CONFIG — where the brand assets live for the email signature
+  // ─────────────────────────────────────────────────────────────
+  // Must be a publicly-reachable URL. When you deploy this page to
+  // GitHub Pages at https://<user>.github.io/<repo>/, the default
+  // below works out-of-the-box. If you host elsewhere, change it.
+  const DEFAULT_ASSETS_BASE = 'https://ahmalnoman.github.io/kaiizn-email-signature';
+
+  // Resolve base: if viewing on a deployed https(s) host, use the
+  // current folder; otherwise fall back to the configured default.
+  const ASSETS_BASE = (() => {
+    const { protocol, href } = window.location;
+    if (protocol === 'https:' || protocol === 'http:') {
+      // Strip trailing file (index.html) to get folder URL.
+      return new URL('.', href).href.replace(/\/$/, '');
+    }
+    return DEFAULT_ASSETS_BASE;
+  })();
+
+  // 512×512 source, displayed at 54×54 → crisp on retina everywhere.
+  const ICON_URL = `${ASSETS_BASE}/kaiizn-icon-email.png`;
+
+  // Show local warning when running from file://
+  if (window.location.protocol === 'file:') {
+    document.getElementById('local-banner').classList.add('show');
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // DOM refs
+  // ─────────────────────────────────────────────────────────────
+  const $ = (id) => document.getElementById(id);
+
+  const inputs = {
+    name:     $('sig-name'),
+    role:     $('sig-role'),
+    office:   $('sig-office'),
+    phone:    $('sig-phone'),
+    linkedin: $('sig-linkedin'),
+  };
+
+  const previewLight = $('preview-light');
+  const previewDark  = $('preview-dark');
+  const copyBtn      = $('copy-btn');
+  const htmlBtn      = $('html-btn');
+  const guideBtn     = $('guide-btn');
+  const copyHtmlBtn  = $('copy-html-btn');
+  const htmlOutput   = $('html-output');
+  const toast        = $('toast');
+  const toastMsg     = $('toast-msg');
+
+  // ─────────────────────────────────────────────────────────────
+  // Helpers
+  // ─────────────────────────────────────────────────────────────
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+
+  const normalizeLinkedIn = (raw) => {
+    if (!raw) return '';
+    let v = raw.trim();
+    if (!v) return '';
+    // Full URL as-is
+    if (/^https?:\/\//i.test(v)) return v;
+    // linkedin.com/... without scheme
+    if (/^(www\.)?linkedin\.com\//i.test(v)) return 'https://' + v;
+    // Bare username / "in/username"
+    v = v.replace(/^\/?in\//i, '').replace(/^\/+/, '');
+    return `https://www.linkedin.com/in/${v}`;
+  };
+
+  const linkedInLabel = (url) => {
+    try {
+      const u = new URL(url);
+      if (u.hostname.endsWith('linkedin.com')) {
+        const parts = u.pathname.split('/').filter(Boolean);
+        const idx = parts.findIndex((p) => p.toLowerCase() === 'in' || p.toLowerCase() === 'company');
+        if (idx !== -1 && parts[idx + 1]) return parts[idx + 1];
+        if (parts.length) return parts[parts.length - 1];
+      }
+      return u.hostname.replace(/^www\./, '');
+    } catch { return 'LinkedIn'; }
+  };
+
+  const telHref = (phone) => 'tel:' + phone.replace(/[^\d+]/g, '');
+
+  // ─────────────────────────────────────────────────────────────
+  // Validation
+  // ─────────────────────────────────────────────────────────────
+  const validate = () => {
+    const state = {
+      name:     inputs.name.value.trim().length > 0,
+      role:     inputs.role.value.trim().length > 0,
+      office:   inputs.office.value.length > 0,
+      linkedin: true,
+    };
+    const li = inputs.linkedin.value.trim();
+    if (li) {
+      const normalized = normalizeLinkedIn(li);
+      try { new URL(normalized); } catch { state.linkedin = false; }
+    }
+    return state;
+  };
+
+  const applyValidation = ({ show = false } = {}) => {
+    const state = validate();
+    Object.entries(state).forEach(([field, ok]) => {
+      const group = document.querySelector(`.fgroup[data-field="${field}"]`);
+      if (!group) return;
+      if (!ok && show) group.classList.add('invalid');
+      else group.classList.remove('invalid');
+    });
+    const allRequiredOk = state.name && state.role && state.office && state.linkedin;
+    copyBtn.disabled = !allRequiredOk;
+    return allRequiredOk;
+  };
+
+  // ─────────────────────────────────────────────────────────────
+  // Signature HTML generator
+  // Everything inline-styled; table-based layout for email clients.
+  // ─────────────────────────────────────────────────────────────
+  const FONT_STACK = "Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+
+  function buildSignature() {
+    const name     = esc(inputs.name.value.trim() || 'Your Name');
+    const role     = esc(inputs.role.value.trim() || 'Your Role');
+    const office   = inputs.office.value;
+    const phoneRaw = inputs.phone.value.trim();
+    const liRaw    = inputs.linkedin.value.trim();
+
+    const liUrl   = liRaw ? normalizeLinkedIn(liRaw) : '';
+    const liValid = liUrl && (() => { try { new URL(liUrl); return true; } catch { return false; } })();
+
+    // Colors — tuned to read on BOTH white and dark backgrounds.
+    const COLOR_NAME    = '#0a0a0f';
+    const COLOR_ROLE    = '#52525b';
+    const COLOR_META    = '#71717a';
+    const COLOR_LINK    = '#7c3aed';
+    const COLOR_DIVIDER = '#e4e4e7';
+
+    const rows = [];
+    // Name
+    rows.push(`<tr><td style="padding:0 0 2px 0;font-family:${FONT_STACK};font-size:16px;line-height:22px;font-weight:700;color:${COLOR_NAME};letter-spacing:-0.01em;">${name}</td></tr>`);
+    // Role
+    rows.push(`<tr><td style="padding:0 0 8px 0;font-family:${FONT_STACK};font-size:13px;line-height:18px;font-weight:500;color:${COLOR_ROLE};">${role}</td></tr>`);
+    // Office
+    if (office) {
+      rows.push(`<tr><td style="padding:0 0 2px 0;font-family:${FONT_STACK};font-size:12px;line-height:18px;color:${COLOR_META};">${esc(office)} Office</td></tr>`);
+    }
+    // Phone
+    if (phoneRaw) {
+      rows.push(`<tr><td style="padding:0 0 2px 0;font-family:${FONT_STACK};font-size:12px;line-height:18px;color:${COLOR_META};"><a href="${esc(telHref(phoneRaw))}" style="color:${COLOR_META};text-decoration:none;">${esc(phoneRaw)}</a></td></tr>`);
+    }
+    // Links row (website + optional LinkedIn)
+    const links = [];
+    links.push(`<a href="https://kaiizn.com" style="color:${COLOR_LINK};text-decoration:none;font-weight:600;">kaiizn.com</a>`);
+    if (liValid) {
+      links.push(`<span style="color:${COLOR_DIVIDER};padding:0 8px;">·</span><a href="${esc(liUrl)}" style="color:${COLOR_LINK};text-decoration:none;font-weight:600;">LinkedIn</a>`);
+    }
+    rows.push(`<tr><td style="padding:6px 0 0 0;font-family:${FONT_STACK};font-size:12px;line-height:18px;">${links.join('')}</td></tr>`);
+
+    return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;font-family:${FONT_STACK};">
+  <tr>
+    <td style="padding:0 18px 0 0;vertical-align:middle;">
+      <a href="https://kaiizn.com" style="text-decoration:none;border:0;outline:none;">
+        <img src="${ICON_URL}" alt="Kaiizn" width="54" height="54" style="display:block;width:54px;height:54px;border:0;outline:none;" />
+      </a>
+    </td>
+    <td style="padding:0 0 0 18px;border-left:2px solid ${COLOR_DIVIDER};vertical-align:middle;">
+      <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;">
+        ${rows.join('\n        ')}
+      </table>
+    </td>
+  </tr>
+</table>`;
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // Render
+  // ─────────────────────────────────────────────────────────────
+  function render() {
+    const html = buildSignature();
+    previewLight.innerHTML = html;
+    previewDark.innerHTML  = html;
+    applyValidation();
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // URL state (shareable pre-filled links)
+  // ─────────────────────────────────────────────────────────────
+  const KEYS = ['name', 'role', 'office', 'phone', 'linkedin'];
+
+  function readURL() {
+    const p = new URLSearchParams(window.location.search);
+    let anyApplied = false;
+    KEYS.forEach((k) => {
+      const v = p.get(k);
+      if (v != null && inputs[k]) {
+        inputs[k].value = v;
+        anyApplied = true;
+      }
+    });
+    return anyApplied;
+  }
+
+  let writeUrlTimer;
+  function writeURL() {
+    clearTimeout(writeUrlTimer);
+    writeUrlTimer = setTimeout(() => {
+      const p = new URLSearchParams();
+      KEYS.forEach((k) => {
+        const v = inputs[k].value.trim();
+        if (v) p.set(k, v);
+      });
+      const qs = p.toString();
+      const newUrl = qs
+        ? `${window.location.pathname}?${qs}`
+        : window.location.pathname;
+      window.history.replaceState(null, '', newUrl);
+    }, 200);
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // Input bindings
+  // ─────────────────────────────────────────────────────────────
+  Object.values(inputs).forEach((el) => {
+    el.addEventListener('input', () => { render(); writeURL(); });
+    el.addEventListener('change', () => { render(); writeURL(); });
+    el.addEventListener('blur', () => applyValidation({ show: true }));
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // Copy: rich HTML to clipboard
+  // ─────────────────────────────────────────────────────────────
+  async function copyRichSignature() {
+    if (!applyValidation({ show: true })) {
+      showToast('Please fill in the required fields', true);
+      return;
+    }
+
+    const html = buildSignature();
+    const plain = previewLight.innerText || '';
+
+    // Preferred: modern Clipboard API with HTML + plain text.
+    if (navigator.clipboard && window.ClipboardItem) {
+      try {
+        const item = new ClipboardItem({
+          'text/html':  new Blob([html],  { type: 'text/html' }),
+          'text/plain': new Blob([plain], { type: 'text/plain' }),
+        });
+        await navigator.clipboard.write([item]);
+        showToast('Signature copied — paste it into your email client');
+        return;
+      } catch { /* fall through to legacy */ }
+    }
+
+    // Fallback: selection-based copy of rendered HTML (preserves formatting).
+    const holder = document.createElement('div');
+    holder.setAttribute('contenteditable', 'true');
+    holder.style.cssText = 'position:fixed;left:-99999px;top:0;opacity:0;';
+    holder.innerHTML = html;
+    document.body.appendChild(holder);
+
+    const range = document.createRange();
+    range.selectNodeContents(holder);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch { ok = false; }
+
+    sel.removeAllRanges();
+    document.body.removeChild(holder);
+
+    if (ok) showToast('Signature copied — paste it into your email client');
+    else    showToast('Copy failed — try "View HTML" instead', true);
+  }
+
+  async function copyHtmlText() {
+    const html = buildSignature();
+    try {
+      await navigator.clipboard.writeText(html);
+      showToast('HTML copied');
+    } catch {
+      htmlOutput.focus();
+      htmlOutput.select();
+      try { document.execCommand('copy'); showToast('HTML copied'); }
+      catch { showToast('Copy failed', true); }
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // Modals
+  // ─────────────────────────────────────────────────────────────
+  function openModal(id) {
+    const el = $(id);
+    if (!el) return;
+    if (id === 'html-modal') htmlOutput.value = buildSignature();
+    el.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    const firstFocus = el.querySelector('button, textarea, [tabindex]');
+    if (firstFocus) firstFocus.focus();
+  }
+
+  function closeModal(id) {
+    const el = $(id);
+    if (!el) return;
+    el.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function closeAllModals() {
+    document.querySelectorAll('.modal-overlay.active').forEach((el) => {
+      el.classList.remove('active');
+    });
+    document.body.style.overflow = '';
+  }
+
+  // Wire up open/close
+  htmlBtn.addEventListener('click',  () => openModal('html-modal'));
+  guideBtn.addEventListener('click', () => openModal('guide-modal'));
+  copyBtn.addEventListener('click',  copyRichSignature);
+  copyHtmlBtn.addEventListener('click', copyHtmlText);
+
+  document.querySelectorAll('[data-close]').forEach((btn) => {
+    btn.addEventListener('click', () => closeModal(btn.dataset.close));
+  });
+
+  document.querySelectorAll('.modal-overlay').forEach((overlay) => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllModals();
+    // ⌘⏎ / Ctrl+Enter triggers copy
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      copyRichSignature();
+    }
+  });
+
+  // Guide tabs
+  document.querySelectorAll('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.tab').forEach((t) => {
+        const active = t === tab;
+        t.classList.toggle('active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      document.querySelectorAll('.tab-panel').forEach((p) => {
+        p.classList.toggle('active', p.dataset.panel === target);
+      });
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // Toast
+  // ─────────────────────────────────────────────────────────────
+  let toastTimer;
+  function showToast(msg, isError = false) {
+    toastMsg.textContent = msg;
+    toast.classList.toggle('err', !!isError);
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // Init
+  // ─────────────────────────────────────────────────────────────
+  readURL();
+  render();
+  applyValidation();
+  inputs.name.focus();
+})();
+</script>
+
+</body>
+</html>
